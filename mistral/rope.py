@@ -1,13 +1,19 @@
 import torch
 from typing import Tuple
 
-
 def precompute_freqs_cis(dim: int, end: int, theta: float) -> torch.Tensor:
+    """
+    Input : 
+        dim : The dim of vector.
+        end : The length of sequence
+        theta : A float for computing frequency
+    Return : 
+        torch.Tensor
+    """
     freqs = 1.0 / (theta ** (torch.arange(0, dim, 2)[: (dim // 2)].float() / dim))
     t = torch.arange(end, device=freqs.device)  # type: ignore
     freqs = torch.outer(t, freqs).float()  # type: ignore
     return torch.polar(torch.ones_like(freqs), freqs)  # complex64
-
 
 def apply_rotary_emb(
     xq: torch.Tensor,

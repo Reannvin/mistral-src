@@ -12,6 +12,19 @@ class MoeArgs(Serializable):
     num_experts: int
     num_experts_per_tok: int
 
+# experts : FeedForward Layer
+#         ______
+#        |      |
+#   x -> |Linear| ---
+#        |______|     \        ______         ______  
+#                      |  *   |      |       |      |
+#                      |----> | SiLU | ----> |Linear| ----> x
+#         ______       |      |______|       |______|
+#        |      |     /
+#   x -> |Linear| ---  
+#        |______| 
+#        
+# gate    : nn.Linear(dim->num_experts)
 
 class MoeLayer(nn.Module):
     def __init__(self, experts: List[nn.Module], gate: nn.Module, moe_args: MoeArgs):
